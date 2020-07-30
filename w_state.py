@@ -1,4 +1,5 @@
 from rp_qst_src import QGAN_method, w_state_3q
+import os
 
 #this would have to be changed across computers. There's another that needs to be changed
 #at the bottom of QGAN_method() in __init__.py
@@ -6,9 +7,9 @@ from rp_qst_src import QGAN_method, w_state_3q
 #I don't know how to make it work universally
 snapbase='C:/Users/frank/PycharmProjects/RP-QST/logs/'
 
-kk = [2, 3, 4]
-epoch = [100, 200, 500, 1000, 2000, 5000]
-batch = [100, 200, 300]
+kk = [5]
+epoch = [500]
+batch = [100]
 
 data = w_state_3q()
 

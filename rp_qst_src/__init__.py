@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 from pprint import pprint
-import os
 # importing Qiskit
 from qiskit import Aer, IBMQ
 from qiskit.providers.ibmq import least_busy
