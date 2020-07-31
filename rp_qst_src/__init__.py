@@ -1,36 +1,20 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[15]:
-# packages for W state
-import matplotlib.pyplot as plt
-import numpy as np
-import time
-from pprint import pprint
-# importing Qiskit
-from qiskit import Aer, IBMQ
-from qiskit.providers.ibmq import least_busy
-from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, execute
-
-# import basic plot tools
-from qiskit.tools.visualization import plot_histogram
+from qiskit import Aer
+from qiskit import ClassicalRegister, execute
 
 # packages for QGAN
 import numpy as np
 
-import matplotlib.pyplot as plt
-
 
 import time
 
-from torch import optim
 from qiskit import QuantumRegister, QuantumCircuit
-from qiskit.aqua.components.optimizers import ADAM
 from qiskit.aqua.components.uncertainty_models import UniformDistribution, UnivariateVariationalDistribution
 from qiskit.aqua.components.variational_forms import RY
 
 from qiskit.aqua.algorithms import QGAN
-from qiskit.aqua.components.neural_networks.quantum_generator import QuantumGenerator
 from qiskit.aqua.components.neural_networks import NumPyDiscriminator
 
 from qiskit.aqua import aqua_globals, QuantumInstance
@@ -218,53 +202,4 @@ def QGAN_method(kk,num_qubit,epochs,batch,bound,snap, data):
     end = time.time()
     print('qGAN training runtime: ', (end - start) / 60., ' min')
 
-    # In[54]:
-
-
-    # Plot progress w.r.t the generator's and the discriminator's loss function
-    t_steps = np.arange(num_epochs)
-    plt.figure(figsize=(6, 5))
-    plt.title("Progress in the loss function")
-    plt.plot(t_steps, qgan.g_loss, label="Generator loss function", color='mediumvioletred', linewidth=2)
-    plt.plot(t_steps, qgan.d_loss, label="Discriminator loss function", color='rebeccapurple', linewidth=2)
-    plt.grid()
-    plt.legend(loc='best')
-    plt.xlabel('time steps')
-    plt.ylabel('loss')
-
-    # Plot progress w.r.t relative entropy
-    plt.figure(figsize=(6, 5))
-    plt.title("Relative Entropy ")
-    plt.plot(np.linspace(0, num_epochs, len(qgan.rel_entr)), qgan.rel_entr, color='mediumblue', lw=4, ls=':')
-    plt.grid()
-    plt.xlabel('time steps')
-    plt.ylabel('relative entropy')
-
-    # Plot the PDF of the resulting distribution against the target distribution, i.e. log-normal
-    log_normal = real_data
-    # log_normal = np.round(log_normal)
-    # log_normal = log_normal[log_normal <= bounds[1]]
-    temp = []
-    for i in range(int(bounds[1] + 1)):
-        temp += [np.sum(log_normal == i)]
-    log_normal = np.array(temp / sum(temp))
-
-    plt.figure(figsize=(6, 5))
-    plt.title("W-State QGAN")
-    samples_g, prob_g = qgan.generator.get_output(qgan.quantum_instance, shots=10000)
-    samples_g = np.array(samples_g)
-    samples_g = samples_g.flatten()
-    num_bins = len(prob_g)
-    plt.bar(samples_g, prob_g, color='royalblue', width=0.8, label='Simulation')
-    plt.plot(log_normal, '-o', label='W-State Measurements', color='deepskyblue', linewidth=4, markersize=12)
-    plt.xticks(np.arange(min(samples_g), max(samples_g) + 1, 1.0))
-    plt.grid()
-    plt.xlabel('x')
-    plt.ylabel('p(x)')
-    plt.legend(loc='best')
-    name = str(kk) + '_' + str(num_qubit) + '_' + str(epochs) + '_' + str(batch) + '_' + str(bound)+'.png'
-
-    #This is the line that needs to be changed
-    address = 'C:/Users/frank/PycharmProjects/RP-QST/logs/' + name
-    plt.savefig(address)
-
+    return qgan
