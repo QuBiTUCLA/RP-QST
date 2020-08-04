@@ -7,7 +7,7 @@ snapbase = 'logs/'
 
 
 kk = [2,3,4,5,6,7]
-epoch = [200]
+epoch = [500]
 batch = [100]
 bounds = 7
 num_qubit = 3
