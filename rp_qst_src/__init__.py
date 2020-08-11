@@ -7,11 +7,11 @@ from qiskit import ClassicalRegister, execute
 # packages for QGAN
 import numpy as np
 
-
 import time
 
 from qiskit import QuantumRegister, QuantumCircuit
 from qiskit.aqua.components.uncertainty_models import UniformDistribution, UnivariateVariationalDistribution
+from qiskit.aqua.components.uncertainty_models import NormalDistribution, LogNormalDistribution, BernoulliDistribution
 from qiskit.aqua.components.variational_forms import RY
 
 from qiskit.aqua.algorithms import QGAN
@@ -127,7 +127,12 @@ def w_state_3q():
     return real_data
 
 
-def QGAN_method(kk,num_qubit,epochs,batch,bound,snap, data):
+# last parameter for Q-GAN method is a string to indicate which uncertainty model you want to test
+# 'normal' = Normal Distribution
+# 'log_normal' = Log-Normal Distribution
+# 'uniform' = Uniform Distribution (uniform is the default)
+
+def QGAN_method(kk, num_qubit, epochs, batch, bound, snap, data, model):
     start = time.time()
 
     real_data = data
@@ -173,7 +178,18 @@ def QGAN_method(kk,num_qubit,epochs,batch,bound,snap, data):
     entangler_map = [[0, 1]]
 
     # Set an initial state for the generator circuit
-    init_dist = UniformDistribution(sum(num_qubits), low=bounds[0], high=bounds[1])
+    if model == 'uniform':
+        init_dist = UniformDistribution(sum(num_qubits), low=bounds[0], high=bounds[1])
+    elif model == 'normal':
+        init_dist = NormalDistribution(sum(num_qubits), mu=0, sigma=1, low=bounds[0], high=bounds[1])
+    elif model == 'log_normal':
+        init_dist = LogNormalDistribution(sum(num_qubits), mu=0, sigma=1, low=bounds[0], high=bounds[1])
+    else:
+        init_dist = UniformDistribution(sum(num_qubits), low=bounds[0], high=bounds[1])
+
+
+
+
     q = QuantumRegister(sum(num_qubits), name='q')
     qc = QuantumCircuit(q)
     init_dist.build(qc, q)
@@ -196,10 +212,13 @@ def QGAN_method(kk,num_qubit,epochs,batch,bound,snap, data):
 
 
     # Run qGAN
+    name = str(kk) + '_' + str(num_qubit) + '_' + str(epochs) + '_' + str(batch) + '_' + str(bound) + '_' + str(model)
+    time_exp = time.strftime('%d/%m/%Y %H:%M:%S')
+    print(name + ' - qGAN training start time:', time_exp)
     qgan.run(quantum_instance)
 
     # Runtime
     end = time.time()
-    print('qGAN training runtime: ', (end - start) / 60., ' min')
+    print(name + ' - qGAN training runtime: ', (end - start) / 60., ' min')
 
     return qgan
