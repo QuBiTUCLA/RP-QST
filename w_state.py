@@ -48,7 +48,7 @@ for i in range(len(kk)):
                        + '_' + str(models[mo]) + '_loss.png'
                 address = 'logs/Generator_And_Discriminator_Loss_Plots/' + name
                 plt.savefig(address)
-
+                plt.close()
 
                 # Plot progress w.r.t relative entropy
                 plt.figure(figsize=(6, 5))
@@ -62,7 +62,7 @@ for i in range(len(kk)):
                        + '_' + str(models[mo]) + '_entr.png'
                 address = 'logs/Entropy_Plots/' + name
                 plt.savefig(address)
-
+                plt.close()
 
                 # Plot the PDF of the resulting distribution against the target distribution, i.e. log-normal
                 log_normal = data
@@ -91,3 +91,4 @@ for i in range(len(kk)):
                        + '_' + str(models[mo]) + '_plot.png'
                 address = 'logs/Probability_Plots/' + name
                 plt.savefig(address)
+                plt.close()

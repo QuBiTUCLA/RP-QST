@@ -175,7 +175,7 @@ def QGAN_method(kk, num_qubit, epochs, batch, bound, snap, data, model):
     quantum_instance = QuantumInstance(backend=BasicAer.get_backend('statevector_simulator'))
 
     # Set entangler map
-    entangler_map = [[0, 1]]
+    entangler_map = [[0, 1], [1, 2], [2, 0]]
 
     # Set an initial state for the generator circuit
     if model == 'uniform':
